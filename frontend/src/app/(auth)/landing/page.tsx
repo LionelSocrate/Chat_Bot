@@ -1,5 +1,3 @@
-"use client";
-
 import { HeroSection } from "@/components/containers/heroSection"
 import {Navbar} from "@/components/containers/Navbar"
 import { TestimonialCarousel } from "@/components/containers/Caroussel";
