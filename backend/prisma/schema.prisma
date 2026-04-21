@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  email  String @id @unique
+  nom    String
+  tel    String @unique
+  agence String
+
+  demandes Demande[]
+}
+
+model Client {
+  email   String @id @unique
+  nom     String
+  adresse String
+  tel     String @unique
+
+  demandes        Demande[]
+  payements       payement[]
+  recommendations Recommendation[]
+  equipements     Equipement[]
+  compteurs       Compteur[]
+}
+
+model Demande {
+  id            Int      @id @default(autoincrement())
+  dateD         DateTime
+  validation    Boolean
+  zone          String
+  datePlacement DateTime
+  clientEmail   String
+  client        Client   @relation(fields: [clientEmail], references: [email])
+  adminEmail    String
+  admin         Admin    @relation(fields: [adminEmail], references: [email])
+}
+
+model payement {
+  id          Int      @id @default(autoincrement())
+  dateP       DateTime @default(now())
+  montant     Float
+  consomation Float
+  tva         Float
+  numTel      String
+  clientEmail String
+  client      Client   @relation(fields: [clientEmail], references: [email])
+}
+
+model Recommendation {
+  id          Int    @id @default(autoincrement())
+  titre       String
+  description String
+  clientEmail String
+  client      Client @relation(fields: [clientEmail], references: [email])
+}
+
+model Equipement {
+  refEquipement String @id @unique
+  nom           String
+  prix          Float
+  clientEmail   String
+  client        Client @relation(fields: [clientEmail], references: [email])
+}
+
+model Compteur {
+  refCompteur      String   @id @unique
+  dateInstallation DateTime
+  clientEmail      String
+  client           Client   @relation(fields: [clientEmail], references: [email])
+}
