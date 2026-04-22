@@ -4,7 +4,7 @@ import { AdminService } from "./admin.service";
 import { CreateAdminDto } from "./admin-dto/admin-user.dto";
 
 @ApiTags("administrateurs")
-@Controller("users")
+@Controller("admin")
 export class AdminController {
   constructor(private adminService: AdminService) {}  
 
