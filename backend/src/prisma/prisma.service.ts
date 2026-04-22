@@ -2,17 +2,25 @@ import { Injectable, OnModuleInit, OnModuleDestroy } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import * as dotenv from 'dotenv';
+
+// S'assurer que les variables d'environnement sont chargées
+dotenv.config();
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    // 1. Créer le pool de connexion avec le driver natif 'pg'
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const connectionString = process.env.DATABASE_URL;
+
+    if (!connectionString) {
+      throw new Error("La variable DATABASE_URL n'est pas définie dans le fichier .env");
+    }
+
+    // Le pool a besoin de la chaîne de connexion directe
+    const pool = new Pool({ connectionString });
     
-    // 2. Créer l'adaptateur Prisma
     const adapter = new PrismaPg(pool);
 
-    // 3. Passer l'adaptateur au constructeur
     super({ adapter });
   }
 
